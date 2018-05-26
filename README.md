@@ -34,6 +34,8 @@ python n_frames_kinetics.py ../data/Moments_in_Time_Mini/jpg/validation
 
 ```bash
 I have uploaded moments.json. Please download it.
+
+Otherwise, you could also take a look at utils/minimoments_json.py
 ```
 
 
