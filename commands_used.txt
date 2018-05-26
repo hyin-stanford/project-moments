@@ -1,0 +1,28 @@
+# Process the data, change video to jpg and change jpg to nframe format.
+
+python video_jpg_kinetics.py ../data/Moments_in_Time_Mini/training ../data/Moments_in_Time_Mini/jpg/training/
+python video_jpg_kinetics.py ../data/Moments_in_Time_Mini/validation ../data/Moments_in_Time_Mini/jpg/validation/
+python n_frames_kinetics.py ../data/Moments_in_Time_Mini/jpg/training
+python n_frames_kinetics.py ../data/Moments_in_Time_Mini/jpg/validation
+
+
+# The strucutre of data storage.
+
+~/
+  data/
+    Moments_in_Time_Mini/
+      jpg/
+        .../ (directories of class names)
+          .../ (directories of video names)
+            ... (jpg files)
+    results/
+      save_100.pth
+    moments.json
+
+# Code for running the training process.
+
+python main.py --root_path ./data --video_path Moments_in_Time_Mini/jpg --annotation_path moments.json 
+--result_path results --dataset moments --model resnet --model_depth 34 --n_classes 200 --batch_size 128 --n_threads 4 --checkpoint 5
+
+
+  
