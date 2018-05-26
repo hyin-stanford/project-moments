@@ -13,7 +13,7 @@ from mean import get_mean, get_std
 from spatial_transforms import (
     Compose, Normalize, Scale, CenterCrop, CornerCrop, MultiScaleCornerCrop,
     MultiScaleRandomCrop, RandomHorizontalFlip, ToTensor)
-from temporal_transforms import LoopPadding, TemporalRandomCrop
+from temporal_transforms import LoopPadding, TemporalRandomCrop, TemporalBeginCrop
 from target_transforms import ClassLabel, VideoID
 from target_transforms import Compose as TargetCompose
 from dataset import get_training_set, get_validation_set, get_test_set
@@ -108,7 +108,7 @@ if __name__ == '__main__':
             CenterCrop(opt.sample_size),
             ToTensor(opt.norm_value), norm_method
         ])
-        temporal_transform = LoopPadding(opt.sample_duration)
+        temporal_transform = TemporalBeginCrop(opt.sample_duration)
         target_transform = ClassLabel()
         validation_data = get_validation_set(
             opt, spatial_transform, temporal_transform, target_transform)
@@ -149,7 +149,7 @@ if __name__ == '__main__':
             CornerCrop(opt.sample_size, opt.crop_position_in_test),
             ToTensor(opt.norm_value), norm_method
         ])
-        temporal_transform = LoopPadding(opt.sample_duration)
+        temporal_transform = TemporalBeginCrop(opt.sample_duration)
         target_transform = VideoID()
 
         test_data = get_test_set(opt, spatial_transform, temporal_transform,
