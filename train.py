@@ -17,6 +17,7 @@ def train_epoch(epoch, data_loader, model, criterion, optimizer, opt,
     data_time = AverageMeter()
     losses = AverageMeter()
     accuracies = AverageMeter()
+    accuracies_5= AverageMeter()
 
     end_time = time.time()
     for i, (inputs, targets) in enumerate(data_loader):
@@ -30,10 +31,11 @@ def train_epoch(epoch, data_loader, model, criterion, optimizer, opt,
         targets = Variable(targets)
         outputs = model(inputs)
         loss = criterion(outputs, targets)
-        acc = calculate_accuracy(outputs, targets)
+        acc, acc_5 = calculate_accuracy(outputs, targets)
 
         losses.update(loss.data[0], inputs.size(0))
         accuracies.update(acc, inputs.size(0))
+        accuracies_5.update(acc_5, inputs.size(0))
 
         optimizer.zero_grad()
         loss.backward()
@@ -55,14 +57,16 @@ def train_epoch(epoch, data_loader, model, criterion, optimizer, opt,
               'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
               'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
               'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-              'Acc {acc.val:.3f} ({acc.avg:.3f})'.format(
+              'Acc {acc.val:.3f} ({acc.avg:.3f})\t'
+              'Acc_5 {acc_5.val:.3f} ({acc_5.avg:.3f})\t'.format(
                   epoch,
                   i + 1,
                   len(data_loader),
                   batch_time=batch_time,
                   data_time=data_time,
                   loss=losses,
-                  acc=accuracies))
+                  acc=accuracies,
+                  acc_5= accuracies_5))
 
     epoch_logger.log({
         'epoch': epoch,
