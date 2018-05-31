@@ -78,7 +78,9 @@ python main.py --root_path ./data --video_path Moments_in_Time_Mini/jpg --annota
 Put the pretrained parameters downloadable at https://drive.google.com/open?id=14KRBqT8ySfPtFSuLsFS2U4I-ihTDs0Y9 at '~/data/models/resnet-34-kinetics.pth', and run code
 
 ```bash
-python main.py --root_path ./data --video_path Moments_in_Time_Mini/jpg --annotation_path moments.json --result_path results --dataset moments --n_classes 400 --n_finetune_classes 200 --pretrain_path models/resnet-34-kinetics.pth --ft_begin_index 4 --model resnet --model_depth 34 --resnet_shortcut A --batch_size 128 --n_threads 4 --checkpoint 5
+python main.py --root_path ./data --video_path Moments_in_Time_Mini/jpg --annotation_path moments.json --result_path results 
+--dataset moments --n_classes 400 --n_finetune_classes 200 --pretrain_path models/resnet-34-kinetics.pth 
+--ft_begin_index 4 --model resnet --model_depth 34 --resnet_shortcut A --batch_size 128 --n_threads 4 --checkpoint 5
 
 ```
 
