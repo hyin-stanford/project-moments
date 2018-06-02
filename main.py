@@ -84,10 +84,10 @@ if __name__ == '__main__':
             pin_memory=True)
         train_logger = Logger(
             os.path.join(opt.result_path, 'train.log'),
-            ['epoch', 'loss', 'acc', 'lr'])
+            ['epoch', 'loss', 'acc', 'acc_5','lr'])
         train_batch_logger = Logger(
             os.path.join(opt.result_path, 'train_batch.log'),
-            ['epoch', 'batch', 'iter', 'loss', 'acc', 'lr'])
+            ['epoch', 'batch', 'iter', 'loss', 'acc', 'acc_5', 'lr'])
 
         if opt.nesterov:
             dampening = 0
@@ -119,7 +119,7 @@ if __name__ == '__main__':
             num_workers=opt.n_threads,
             pin_memory=True)
         val_logger = Logger(
-            os.path.join(opt.result_path, 'val.log'), ['epoch', 'loss', 'acc'])
+            os.path.join(opt.result_path, 'val.log'), ['epoch', 'loss', 'acc', 'acc_5'])
 
     if opt.resume_path:
         print('loading checkpoint {}'.format(opt.resume_path))
