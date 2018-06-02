@@ -48,7 +48,7 @@ def train_epoch(epoch, data_loader, model, criterion, optimizer, opt,
             'epoch': epoch,
             'batch': i + 1,
             'iter': (epoch - 1) * len(data_loader) + (i + 1),
-            'loss': losses.val,
+            'loss': losses.val.tolist(),
             'acc': accuracies.val,
             'lr': optimizer.param_groups[0]['lr']
         })
