@@ -202,8 +202,13 @@ class Moments(data.Dataset):
         target = self.data[index]
         if self.target_transform is not None:
             target = self.target_transform(target)
+        video_id= self.data[index]['video_id']
+        # print (self.data)
+        # print ('\n')
+        # print (clip)
+        # print (target)
 
-        return clip, target
+        return clip, target, video_id
 
     def __len__(self):
         return len(self.data)

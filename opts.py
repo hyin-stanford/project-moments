@@ -158,6 +158,8 @@ def parse_opts():
     parser.set_defaults(no_val=False)
     parser.add_argument(
         '--test', action='store_true', help='If true, test is performed.')
+    parser.add_argument(
+        '--debug', action='store_true', help='If true, print out wrong results is performed.')
     parser.set_defaults(test=False)
     parser.add_argument(
         '--test_subset',

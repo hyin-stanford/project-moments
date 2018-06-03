@@ -18,10 +18,10 @@ def val_epoch(epoch, data_loader, model, criterion, opt, logger):
     accuracies_5= AverageMeter()
 
     end_time = time.time()
-    for i, (inputs, targets) in enumerate(data_loader):
+    for i, (inputs, targets, video_id) in enumerate(data_loader):
         data_time.update(time.time() - end_time)
 
-        print ('This line has been executed')
+        # print ('This line has been executed')
 
         if not opt.no_cuda:
             targets = targets.cuda(async=True)
@@ -38,6 +38,9 @@ def val_epoch(epoch, data_loader, model, criterion, opt, logger):
         batch_time.update(time.time() - end_time)
         end_time = time.time()
 
+        if opt.debug:
+          if acc_5==0:
+            print (video_id)
         print('Validation, Epoch: [{0}][{1}/{2}]\t'
               'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
               'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
@@ -52,6 +55,8 @@ def val_epoch(epoch, data_loader, model, criterion, opt, logger):
                   loss=losses,
                   acc=accuracies, 
                   acc_5= accuracies_5))
+
+
 
     logger.log({'epoch': epoch, 'loss': losses.avg.tolist(), 'acc': accuracies.avg, 'acc_5':accuracies_5.avg})
 

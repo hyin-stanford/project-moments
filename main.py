@@ -97,7 +97,7 @@ if __name__ == '__main__':
             parameters,
             lr=opt.learning_rate,
             momentum=opt.momentum,
-            dampening=dampening,
+            dampening=dampening, 
             weight_decay=opt.weight_decay,
             nesterov=opt.nesterov)
         scheduler = lr_scheduler.ReduceLROnPlateau(
@@ -132,16 +132,38 @@ if __name__ == '__main__':
             optimizer.load_state_dict(checkpoint['optimizer'])
 
     print('run')
-    for i in range(opt.begin_epoch, opt.n_epochs + 1):
-        if not opt.no_train:
-            train_epoch(i, train_loader, model, criterion, optimizer, opt,
+
+    if opt.debug and opt.resume_path:
+        spatial_transform = Compose([
+            Scale(opt.sample_size),
+            CenterCrop(opt.sample_size),
+            ToTensor(opt.norm_value), norm_method
+        ])
+        temporal_transform = TemporalBeginCrop(opt.sample_duration)
+        target_transform = ClassLabel()
+        validation_data = get_validation_set(
+            opt, spatial_transform, temporal_transform, target_transform)
+        val_loader = torch.utils.data.DataLoader(
+            validation_data,
+            batch_size=1,
+            shuffle=False,
+            num_workers=opt.n_threads,
+            pin_memory=True)
+        validation_loss= val_epoch(1, val_loader, model, criterion, opt, val_logger)
+    if not opt.debug:
+        for i in range(opt.begin_epoch, opt.n_epochs + 1):
+            if not opt.no_train:
+                train_epoch(i, train_loader, model, criterion, optimizer, opt,
                         train_logger, train_batch_logger)
-        if not opt.no_val:
-            validation_loss = val_epoch(i, val_loader, model, criterion, opt,
+            if not opt.no_val:
+                validation_loss = val_epoch(i, val_loader, model, criterion, opt,
                                         val_logger)
 
-        if not opt.no_train and not opt.no_val:
-            scheduler.step(validation_loss)
+            if not opt.no_train and not opt.no_val:
+                scheduler.step(validation_loss)
+    
+
+
 
     if opt.test:
         spatial_transform = Compose([
