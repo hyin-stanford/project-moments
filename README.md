@@ -79,10 +79,27 @@ python main.py --root_path ./data --video_path Moments_in_Time_Mini/jpg --annota
 Put the pretrained parameters downloadable at https://drive.google.com/open?id=14KRBqT8ySfPtFSuLsFS2U4I-ihTDs0Y9 at '~/data/models/resnet-34-kinetics.pth', and run code
 
 ```bash
+python main.py --root_path ./data --video_path Moments_in_Time_Mini/jpg --annotation_path moments.json --result_path results --dataset moments --n_classes 400 --n_finetune_classes 200 --pretrain_path models/resnet-101-kinetics.pth --ft_begin_index 4 --model resnet --model_depth 101 --resnet_shortcut B --batch_size 30 --n_threads 4 --checkpoint 5
+```
+```bash
 python main.py --root_path ./data --video_path Moments_in_Time_Mini/jpg --annotation_path moments.json --result_path results 
 --dataset moments --n_classes 400 --n_finetune_classes 200 --pretrain_path models/resnet-34-kinetics.pth 
 --ft_begin_index 4 --model resnet --model_depth 34 --resnet_shortcut A --batch_size 30 --n_threads 4 --checkpoint 5
-
+```
+The parameters used for other models are listed here:
+```bash
+resnet-18-kinetics.pth: --model resnet --model_depth 18 --resnet_shortcut A
+resnet-34-kinetics.pth: --model resnet --model_depth 34 --resnet_shortcut A
+resnet-34-kinetics-cpu.pth: CPU ver. of resnet-34-kinetics.pth
+resnet-50-kinetics.pth: --model resnet --model_depth 50 --resnet_shortcut B
+resnet-101-kinetics.pth: --model resnet --model_depth 101 --resnet_shortcut B
+resnet-152-kinetics.pth: --model resnet --model_depth 152 --resnet_shortcut B
+resnet-200-kinetics.pth: --model resnet --model_depth 200 --resnet_shortcut B
+preresnet-200-kinetics.pth: --model preresnet --model_depth 200 --resnet_shortcut B
+wideresnet-50-kinetics.pth: --model wideresnet --model_depth 50 --resnet_shortcut B --wide_resnet_k 2
+resnext-101-kinetics.pth: --model resnext --model_depth 101 --resnet_shortcut B --resnext_cardinality 32
+densenet-121-kinetics.pth: --model densenet --model_depth 121
+densenet-201-kinetics.pth: --model densenet --model_depth 201
 ```
 ## Plot train history
 
