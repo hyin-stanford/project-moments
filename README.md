@@ -100,7 +100,8 @@ Since I only train on pretrained model by now, see the latter part for reading p
 python main.py --root_path ./data --video_path Moments_in_Time_Mini/jpg --annotation_path moments.json --result_path results --dataset moments --resume_path results/save_5.pth --model_depth 34 --n_classes 200 --batch_size 30 --n_threads 4 --checkpoint 5
 ```
 
-## Continue the training process from pretrained and used trained.
+## Continue the training process from pretrained and old trained parameters.
+If you train based on pretrained model, then you should use this code for resume training.
 ```bash
 python main.py --root_path ./data --video_path Moments_in_Time_Mini/jpg --annotation_path moments.json --result_path results --dataset moments --n_classes 400 --n_finetune_classes 200 --pretrain_path models/resnet-34-kinetics.pth --resume_path results/save_15.pth --ft_begin_index 4 --model resnet --model_depth 34 --resnet_shortcut A --batch_size 30 --n_threads 4 --checkpoint 5
 ```
@@ -108,6 +109,7 @@ python main.py --root_path ./data --video_path Moments_in_Time_Mini/jpg --annota
 
 ## Print out some wrongly classified samples.
 
+This part is for an intuitive understanding of wrongly classified samples.
 ```bash
 python main.py ---root_path ./data --video_path Moments_in_Time_Mini/jpg --annotation_path moments.json --result_path results --dataset moments --n_classes 400 --n_finetune_classes 200 --pretrain_path models/resnet-34-kinetics.pth --resume_path results/save_15.pth --ft_begin_index 4 --debug --model resnet --model_depth 34 --resnet_shortcut A --batch_size 30 --n_threads 4 --checkpoint 5
 ```
