@@ -41,6 +41,7 @@ def val_epoch(epoch, data_loader, model, criterion, opt, logger):
         if opt.debug:
           if acc_5==0:
             print (video_id)
+            print (targets)
         print('Validation, Epoch: [{0}][{1}/{2}]\t'
               'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
               'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'

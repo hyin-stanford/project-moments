@@ -55,6 +55,8 @@ def calculate_accuracy(outputs, targets):
     _, pred_5= outputs.topk(5, 1, True)
     pred = pred.t()
     pred_5= pred_5.t()
+    if batch_size==1:
+        print (pred_5.tolist())
     correct = pred.eq(targets.view(1, -1))
     correct_5= pred_5.eq(targets.view(1, -1))
     # print (correct_5)
