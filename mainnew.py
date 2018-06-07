@@ -22,6 +22,7 @@ from train import train_epoch
 from validation_new import val_epoch
 from test_model import load_model, load_categories, load_transform
 import test
+import torchvision.models as models
 
 if __name__ == '__main__':
     opt = parse_opts()
@@ -48,9 +49,12 @@ if __name__ == '__main__':
     categories = load_categories()
     print (len(categories))
     model_id = 1
-    model = load_model(model_id, categories)
+    # model = load_model(model_id, categories)
     # model = model.cuda()
-    print (model)
+    # print (model)
+    # model= models.__dict__['resnet50'](num_classes=200)
+    model=  models.resnet18(pretrained= True, num_classes= 200)
+    parameters= model.parameters()
 
     # model, parameters = generate_model(opt)
     # print(model)
@@ -66,57 +70,57 @@ if __name__ == '__main__':
     else:
         norm_method = Normalize(opt.mean, opt.std)
 
-    # if not opt.no_train:
-    #     assert opt.train_crop in ['random', 'corner', 'center']
-    #     if opt.train_crop == 'random':
-    #         crop_method = MultiScaleRandomCrop(opt.scales, opt.sample_size)
-    #     elif opt.train_crop == 'corner':
-    #         crop_method = MultiScaleCornerCrop(opt.scales, opt.sample_size)
-    #     elif opt.train_crop == 'center':
-    #         crop_method = MultiScaleCornerCrop(
-    #             opt.scales, opt.sample_size, crop_positions=['c'])
-    #     spatial_transform = Compose([
-    #         crop_method,
-    #         RandomHorizontalFlip(),
-    #         ToTensor(opt.norm_value), norm_method
-    #     ])
-    #     temporal_transform = TemporalRandomCrop(opt.sample_duration)
-    #     target_transform = ClassLabel()
-    #     training_data = get_training_set(opt, spatial_transform,
-    #                                      temporal_transform, target_transform)
-    #     train_loader = torch.utils.data.DataLoader( 
-    #         training_data,
-    #         batch_size=opt.batch_size,
-    #         shuffle=True,
-    #         num_workers=opt.n_threads,
-    #         pin_memory=True)
-    #     train_logger = Logger(
-    #         os.path.join(opt.result_path, 'train.log'),
-    #         ['epoch', 'loss', 'acc', 'acc_5','lr'])
-    #     train_batch_logger = Logger(
-    #         os.path.join(opt.result_path, 'train_batch.log'),
-    #         ['epoch', 'batch', 'iter', 'loss', 'acc', 'acc_5', 'lr'])
+    if not opt.no_train:
+        assert opt.train_crop in ['random', 'corner', 'center']
+        if opt.train_crop == 'random':
+            crop_method = MultiScaleRandomCrop(opt.scales, opt.sample_size)
+        elif opt.train_crop == 'corner':
+            crop_method = MultiScaleCornerCrop(opt.scales, opt.sample_size)
+        elif opt.train_crop == 'center':
+            crop_method = MultiScaleCornerCrop(
+                opt.scales, opt.sample_size, crop_positions=['c'])
+        spatial_transform = Compose([
+            crop_method,
+            RandomHorizontalFlip(),
+            ToTensor(opt.norm_value), norm_method
+        ])
+        temporal_transform = TemporalRandomCrop(opt.sample_duration)
+        target_transform = ClassLabel()
+        training_data = get_training_set(opt, spatial_transform,
+                                         temporal_transform, target_transform)
+        train_loader = torch.utils.data.DataLoader( 
+            training_data,
+            batch_size=opt.batch_size,
+            shuffle=True,
+            num_workers=opt.n_threads,
+            pin_memory=True)
+        train_logger = Logger(
+            os.path.join(opt.result_path, 'train.log'),
+            ['epoch', 'loss', 'acc', 'acc_5','lr'])
+        train_batch_logger = Logger(
+            os.path.join(opt.result_path, 'train_batch.log'),
+            ['epoch', 'batch', 'iter', 'loss', 'acc', 'acc_5', 'lr'])
 
-    #     if opt.nesterov:
-    #         dampening = 0
-    #     else:
-    #         dampening = opt.dampening
-    #     optimizer = optim.SGD(
-    #         parameters,
-    #         lr=opt.learning_rate,
-    #         momentum=opt.momentum,
-    #         dampening=dampening, 
-    #         weight_decay=opt.weight_decay,
-    #         nesterov=opt.nesterov)
-    #     scheduler = lr_scheduler.ReduceLROnPlateau(
-    #         optimizer, 'min', patience=opt.lr_patience)
+        if opt.nesterov:
+            dampening = 0
+        else:
+            dampening = opt.dampening
+        optimizer = optim.SGD(
+            parameters,
+            lr=opt.learning_rate,
+            momentum=opt.momentum,
+            dampening=dampening, 
+            weight_decay=opt.weight_decay,
+            nesterov=opt.nesterov)
+        scheduler = lr_scheduler.ReduceLROnPlateau(
+            optimizer, 'min', patience=opt.lr_patience)
     if not opt.no_val:
-        # spatial_transform = Compose([
-        #     Scale(opt.sample_size),
-        #     CenterCrop(opt.sample_size),
-        #     ToTensor(opt.norm_value), norm_method
-        # ])
-        spatial_transform= load_transform()
+        spatial_transform = Compose([
+            Scale(opt.sample_size),
+            CenterCrop(opt.sample_size),
+            ToTensor(opt.norm_value), norm_method
+        ])
+        # spatial_transform= load_transform()
         # temporal_transform = TemporalBeginCrop(opt.sample_duration)
         temporal_transform= TemporalRandomCrop(opt.sample_duration)
         target_transform = ClassLabel()
@@ -168,17 +172,17 @@ if __name__ == '__main__':
     #         num_workers=opt.n_threads,
     #         pin_memory=True)
     #     validation_loss= val_epoch(1, val_loader, model, criterion, opt, val_logger)
-    # if not opt.debug:
-    #     for i in range(opt.begin_epoch, opt.n_epochs + 1):
-    #         if not opt.no_train:
-    #             train_epoch(i, train_loader, model, criterion, optimizer, opt,
-    #                     train_logger, train_batch_logger)
-    #         if not opt.no_val:
-    #             validation_loss = val_epoch(i, val_loader, model, criterion, opt,
-    #                                     val_logger)
+    if not opt.debug:
+        for i in range(opt.begin_epoch, opt.n_epochs + 1):
+            if not opt.no_train:
+                train_epoch(i, train_loader, model, criterion, optimizer, opt,
+                        train_logger, train_batch_logger)
+            if not opt.no_val:
+                validation_loss = val_epoch(i, val_loader, model, criterion, opt,
+                                        val_logger)
 
-    #         if not opt.no_train and not opt.no_val:
-    #             scheduler.step(validation_loss)
+            if not opt.no_train and not opt.no_val:
+                scheduler.step(validation_loss)
     
 
 
