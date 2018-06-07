@@ -21,7 +21,7 @@ valset = Moments(subset='validation')
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
 # device = torch.device("cpu")
-print("Running on device" device)        
+print("Running on device", device)        
 
 print("Number of training videos:", len(trainset))
 print("Number of validation videos:", len(valset))
