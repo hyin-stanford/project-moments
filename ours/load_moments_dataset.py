@@ -5,18 +5,8 @@ import glob
 import os
 from PIL import Image
 
-rootPath = "../data"   ## subject to change
+from global_params import rootPath, label2idx
 
-
-def buildIndexLabelMapping() :
-    idx2label = os.listdir(os.path.join(rootPath, 'Moments_in_Time_Mini/jpg/validation'))
-    label2idx = {}
-    for i, label in enumerate(idx2label) :
-        label2idx[label] = i
-    return idx2label, label2idx
-
-# idx2label, label2idx = buildIndexLabelMapping()
-    
 
 class Moments(Dataset) :
     """
@@ -24,13 +14,11 @@ class Moments(Dataset) :
     """    
     def __init__(self, subset='validation', use_frames=16) :
         super().__init__()
-        root = os.path.join(rootPath, 'Moments_in_Time_Mini/jpg', subset)     
         self.use_frames = use_frames
         
         self.filenames = []
 
-        _, label2idx = buildIndexLabelMapping()
-        for video_path in glob.glob(os.path.join(root, "*/*")) :
+        for video_path in glob.glob(os.path.join(rootPath, 'Moments_in_Time_Mini/jpg', subset, "*/*")) :
             label = video_path.split('/')[-2]
             self.filenames.append((video_path, label2idx[label]))
         self.len = len(self.filenames)
@@ -48,7 +36,10 @@ class Moments(Dataset) :
         for i in range(1, 1+self.use_frames * time_spacing, time_spacing) :
             img = Image.open(os.path.join(video_path, 'image_{:05d}.jpg'.format(i))).convert('RGB')
             video.append(self.tf(img))
-        return torch.stack(video, dim=1), label
+        return torch.stack(video, dim=1), label, video_path
 
     def __len__(self) :
         return self.len
+
+if __name__ == '__main__' :
+    pass

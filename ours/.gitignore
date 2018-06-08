@@ -1,4 +1,5 @@
 zz_to*
-log*
-val*
+.ipynb_checkpoints
+log-train
+val
 
