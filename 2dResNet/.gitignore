@@ -1,0 +1,5 @@
+zz_to_delete
+.ipynb_checkpoints/*
+log-train/*
+val/*
+
